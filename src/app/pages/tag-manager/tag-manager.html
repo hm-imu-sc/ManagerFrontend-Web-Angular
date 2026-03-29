@@ -1,0 +1,108 @@
+<!-- <button class="btn-basic" (click)="load()">Load</button> -->
+<div class="p-2">
+    <h1 class="text-3xl md:text-5xl text-center pt-10">Tag manager</h1>
+    @if (apps$ | async) {
+        <div class="flex flex-col md:flex-row justify-center pt-10">
+            @for (app of apps$ | async; track $index) {
+                <button 
+                    type="button" 
+                    class="app-tab" 
+                    [class.selected]="$index === selectedAppIdx"
+                    (click)="onAppClick($index)">
+                    {{ app.name }}
+                </button>
+            }
+        </div>
+    }
+    @if (appTags$ | async) {
+        <div #tagContainer class="flex flex-col gap-2 md:flex-row border-2 default-border-color rounded-xl mt-5 md:h-[75vh] p-2 overflow-x-scroll">
+            <!-- @if (((appTags$ | async)?.length ?? 0) === 0) {
+                <div class="text-center w-full">
+                    No tags to display.
+                </div>
+            } -->
+            @for (lwt of levelWiseTags; track $index; let level = $index) {
+                @if (isShowLevel($index) && level > 0) {
+                    <div class="tag-nest default-border-color shrink-0">
+                        @for (tag of lwt; track $index; let tagIdx = $index) {
+                            @if (isShowTag(level, tagIdx)) {
+                                <div 
+                                    class="tag-box"
+                                    [class.disabled]="isDisable() && (tagEID.level !== level || tagEID.idx !== tagIdx)">
+                                    @if (tagEID.level === level && tagEID.idx === tagIdx) {
+                                        <ng-container
+                                            [ngTemplateOutlet]="tagInsertRename">
+                                        </ng-container>
+                                    }
+                                    @else {
+                                        <button
+                                            class="tag"
+                                            [class.selected]="tagIdx === levelWiseSelectedTagIdx[level]" 
+                                            type="button"
+                                            (click)="onTagClick(level, tagIdx)">
+                                            {{ tag.name }}
+                                        </button>
+                                        <div class="flex flex-col justify-between">
+                                            <button 
+                                                class="tag-control"
+                                                type="button"
+                                                (click)="onEditClick(level, tagIdx)">
+                                                <i class="fad fa-pencil-alt"></i>
+                                            </button>
+                                            <button 
+                                                class="tag-control"
+                                                type="button"
+                                                (click)="onDeleteClick(level, tagIdx)">
+                                                <i class="fad fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                        @if (mode.insert === true && tagEID.level === level) {
+                            <div class="tag-box">
+                                <ng-container
+                                    [ngTemplateOutlet]="tagInsertRename">
+                                </ng-container>
+                            </div>  
+                        }
+                        @else {
+                            <button 
+                                class="tag insert" 
+                                [class.disabled]="isDisable()"
+                                type="button"
+                                (click)="onInsertClick(level)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+<ng-template #tagInsertRename>
+    <input 
+        class="tag-edit-box"
+        [class.confirm-delete]="mode.delete === true"
+        type="text"
+        [value]="tagEID.box"
+        (input)="tagEID.box = $any($event.target).value" />
+    <div class="tag-edit-box-controls flex flex-col justify-between">
+        <button 
+            class="tag-control text-lime-500"
+            [class.disabled]="!tagEID.box || tagEID.box.trim() === '' || isDirtyEID()"
+            type="button"
+            (click)="onSaveClickAsync()">
+            <i class="fas fa-check"></i>
+        </button>
+        <button 
+            class="tag-control text-red-600"
+            type="button"
+            (click)="onCancelClick()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</ng-template>

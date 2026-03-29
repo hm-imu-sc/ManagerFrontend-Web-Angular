@@ -25,6 +25,7 @@
               }
             ],
             "styles": [
+              "public/icons/font-awesome/css/all.css",
               "src/styles.css"
             ]
           },

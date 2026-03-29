@@ -1,0 +1,4 @@
+
+interface IComponent {
+    class: string;
+}

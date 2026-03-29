@@ -1,0 +1,20 @@
+<div class="
+    fixed z-9999
+    top-4
+    w-[90%] sm:w-[320px]
+    left-1/2 -translate-x-1/2
+    sm:left-auto sm:translate-x-0 sm:right-4
+    flex flex-col gap-3">
+    <div *ngFor="let alert of (alerts$ | async)" class="alert-box {{ alert.mode }} flex items-center justify-between gap-3
+              px-4 py-3 rounded-xl shadow-lg text-sm 
+              transition-all duration-300">
+
+        <span class="flex-1 wrap-break-word overflow-auto">
+            {{ alert.text }}
+        </span>
+
+        <button class="btn-close hover:opacity-70 transition" (click)="close(alert.id)">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>

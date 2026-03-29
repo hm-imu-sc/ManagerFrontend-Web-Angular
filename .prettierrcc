@@ -1,0 +1,15 @@
+{
+  "printWidth": 200,
+  "htmlWhitespaceSensitivity": "ignore",
+  "singleQuote": true,
+  "semi": true,
+  "tabWidth": 2,
+  "overrides": [
+    {
+      "files": ["*.ts", "*.html"],
+      "options": {
+        "tabWidth": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+.alert-box {
+    background-color: var(--default-background-color);
+}
+
+.alert-box.info {
+    border: 2px solid var(--default-text-color);
+}
+
+.alert-box.success {
+    border: 2px solid limegreen;
+}
+
+.alert-box.failed {
+    border: 2px solid red;
+}
+
+.alert-box.info > span {
+    color: var(--default-text-color);
+}
+
+.alert-box.success > span {
+    color: limegreen;
+}
+
+.alert-box.failed > span {
+    color: red;
+}
+
+.alert-box.info > button {
+    color: var(--default-text-color);
+    cursor: pointer;
+}
+
+.alert-box.success > button {
+    color: limegreen;
+    cursor: pointer;
+}
+
+.alert-box.failed > button {
+    color: red;
+    cursor: pointer;
+}

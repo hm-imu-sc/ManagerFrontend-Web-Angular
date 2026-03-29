@@ -1,0 +1,130 @@
+
+@import "tailwindcss";
+
+.app-tab {
+    @apply border border-x-2 md:border-x md:border-y-2 py-2 px-5;
+    border-color: var(--default-border-color);
+}
+
+.app-tab:nth-child(1) {
+    @apply border-t-2 md:border-l-2 rounded-tl-lg md:rounded-bl-lg rounded-tr-lg md:rounded-tr-none;
+}
+
+.app-tab:nth-last-child(1) {
+    @apply border-b-2 md:border-r-2 rounded-br-lg md:rounded-tr-lg rounded-bl-lg md:rounded-bl-none;
+}
+
+.app-tab.selected {
+    background-color: var(--default-text-color);
+    color: var(--default-border-color);
+    border-color: var(--default-text-color);
+    pointer-events: none;
+    user-select: none;
+}
+
+.app-tab.selected:hover {
+    background-color: var(--default-text-color);
+    color: var(--default-border-color);
+    border-color: var(--default-text-color);
+    cursor: auto;
+}
+
+.app-tab:hover {
+    background-color: var(--default-border-color);
+    user-select: none;
+    cursor: pointer;
+}
+
+.tag {
+    @apply p-3 border-2 text-left w-full md:max-w-75 min-w-45 rounded-l-lg cursor-pointer mr-0.5;
+    border-color: var(--default-background-color);
+    /* border-right-color: var(--default-border-color); */
+    background-color: var(--default-background-color);
+}
+.tag:hover {
+    background-color: var(--default-border-color);
+    border: 2px solid var(--default-background-color);
+    /* color: var(--default-background-color); */
+}
+
+.tag-edit-box {
+    @apply p-3 text-left w-full md:max-w-0 min-w-45 rounded-l-lg cursor-text focus:outline-0;
+    border: 2px solid var(--default-background-color);
+    background-color: var(--default-border-color);  
+    color: var(--default-text-color);
+}
+
+.tag.selected {
+    /* border: 2px solid var(--default-background-color); */
+    border-color: var(--default-text-color);
+    /* border-right-color: var(--default-border-color); */
+    background-color: var(--default-text-color);  
+    color: var(--default-background-color);
+    pointer-events: none;
+    user-select: none;
+}
+/* .tag.selected:hover {
+    background-color: var(--default-border-color);
+    color: var(--default-text-color);
+    cursor: auto;
+} */
+
+.tag.insert {
+    @apply rounded-lg border-r-0 text-center;
+}
+
+.tag.insert:hover {
+    border-color: var(--default-text-color);
+    background-color: var(--default-text-color);
+    color: var(--default-background-color);
+}
+
+.tag-control {
+    @apply px-1 text-center cursor-pointer w-full;
+    border-color: var(--default-border-color);
+    background-color: var(--default-background-color);
+}
+.tag-control:hover {
+    background-color: var(--default-text-color);
+    color: var(--default-background-color);
+}
+
+.tag-control:nth-child(1) {
+    @apply border-b rounded-tr-lg;
+    padding-top: 1px;
+}
+
+.tag-control:nth-last-child(1) {
+    @apply border-t rounded-br-lg;
+    padding-bottom: 1px;
+}
+
+.tag-nest {
+    @apply flex flex-col gap-1 w-full md:w-max overflow-y-auto border p-1 rounded-lg max-h-60 md:max-h-none;
+    background-color: var(--default-border-color);
+}
+
+.tag-box {
+    @apply flex flex-row justify-between align-middle;
+}
+
+.tag-box > .tag-edit-box, .tag-box > .tag-edit-box-controls {
+    @apply rounded-lg;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+.tag-box > .tag-edit-box.confirm-delete {
+    box-shadow: 0 6px 18px rgba(131, 2, 2, 0.6);
+}
+
+.confirm-delete {
+    pointer-events: none;
+    background-color: rgba(255, 0, 0, 0.247);
+    border-color: red;
+    color: white;
+}
+
+.tag-container {
+    border: 2px solid red;
+}

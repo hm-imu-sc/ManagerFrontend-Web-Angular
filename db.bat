@@ -1,0 +1,1 @@
+json-server --watch dummy_data.json --host 0.0.0.0
