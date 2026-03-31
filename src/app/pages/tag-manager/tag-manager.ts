@@ -208,6 +208,7 @@ export class TagManager implements OnInit {
                     this.appTags$.next(tags);
                 }
             });
+        this.disableEID();
     }
 
     onTagClick(level: number, tagIndex: number): void {
@@ -250,7 +251,7 @@ export class TagManager implements OnInit {
                     this.levelWiseSelectedTagIdx[this.tagEID.level]--;
                 }
 
-                this.disableEditInsert();
+                this.disableEID();
             }
             else {
                 throw new Error(response.generalResponse.message);
@@ -297,7 +298,7 @@ export class TagManager implements OnInit {
                     this.levelWiseSelectedTagIdx.push(Dummy.int);
                 }
                 this._alertService.show(`new tag "${body.name}" created`, 'success');
-                this.disableEditInsert();
+                this.disableEID();
             }
             else {
                 throw new Error(response.generalResponse.message); 
@@ -322,7 +323,7 @@ export class TagManager implements OnInit {
             if (response.generalResponse.isSuccess) {
                 this._alertService.show(`renamed "${this.levelWiseTags[this.tagEID.level][this.tagEID.idx].name}" > "${this.tagEID.box}"`, 'success');
                 this.levelWiseTags[this.tagEID.level][this.tagEID.idx].name = this.tagEID.box;
-                this.disableEditInsert();
+                this.disableEID();
             }
             else {
                 throw new Error(response.generalResponse.message);
@@ -347,10 +348,10 @@ export class TagManager implements OnInit {
     }
     
     onCancelClick(): void {
-        this.disableEditInsert();
+        this.disableEID();
     }
 
-    disableEditInsert(): void {
+    disableEID(): void {
         this.tagEID.reset();
         this.mode.reset();
         this._cdr.detectChanges();
