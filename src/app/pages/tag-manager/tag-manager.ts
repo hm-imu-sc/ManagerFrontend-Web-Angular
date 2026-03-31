@@ -146,7 +146,7 @@ export class TagManager implements OnInit {
             return response.tags!;
         }
         catch (error) {
-            console.log(`getTagsAsync(): ${error}`);            
+            console.log(`getTagsAsync(): ${error}`);
         }
         return Empty.array;
     }
@@ -235,9 +235,9 @@ export class TagManager implements OnInit {
     async deleteTagAsync() {
         try {
             const tagId = this.levelWiseTags[this.tagEID.level][this.tagEID.idx].id;
-            const api = `/api/Tag/deleteTag/${tagId}`;
+            const api = `/api/Tag/deleteTag`;
             
-            const response = await this._apiService.post<{}>(api, null);
+            const response = await this._apiService.post<{}>(api, tagId);
         
             if (response.generalResponse.isSuccess) {
                 this._alertService.show(`deleted "${this.levelWiseTags[this.tagEID.level][this.tagEID.idx].name}"`, 'success');
@@ -312,10 +312,13 @@ export class TagManager implements OnInit {
     async renameTagAsync() {
         try {
             const tagId = this.levelWiseTags[this.tagEID.level][this.tagEID.idx].id;
-            const api = `/api/Tag/updateTagName/${tagId}`;
-            
-            const response = await this._apiService.post<{}>(api, JSON.stringify(this.tagEID.box));
-        
+            const api = `/api/Tag/updateTagName`;
+            const body = {
+                tagId: tagId,
+                newTagName: this.tagEID.box
+            }
+
+            const response = await this._apiService.post<{}>(api, body);
             if (response.generalResponse.isSuccess) {
                 this._alertService.show(`renamed "${this.levelWiseTags[this.tagEID.level][this.tagEID.idx].name}" > "${this.tagEID.box}"`, 'success');
                 this.levelWiseTags[this.tagEID.level][this.tagEID.idx].name = this.tagEID.box;
