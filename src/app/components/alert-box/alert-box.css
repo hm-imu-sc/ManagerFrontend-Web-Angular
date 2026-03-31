@@ -4,6 +4,10 @@
     background-color: var(--default-background-color);
 }
 
+.alert-box > span {
+    font-family: 'consolas';
+}
+
 .alert-box.info {
     border: 2px solid var(--default-text-color);
 }
