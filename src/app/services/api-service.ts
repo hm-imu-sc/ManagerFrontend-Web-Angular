@@ -14,7 +14,8 @@ export type GeneralResponse = {
 })
 export class ApiService {
     // baseUrl: string = 'http://192.168.0.25:3000'; // DummyDb
-    baseUrl: string = 'https://localhost:7283';
+    // baseUrl: string = 'https://localhost:5000'; // devlopment 
+    baseUrl: string = 'http://192.168.0.25:8500'; // devlopment(For Mobile)
 
     constructor(private http: HttpClient) {}
 
@@ -40,7 +41,7 @@ export class ApiService {
         type Response = R & GeneralResponse;
         return new Promise<Response>((resolve, reject) => {
             this.http
-                .post<Response>(`${this.baseUrl}${api}`, body, { headers: { 'Content-Type': 'application/json' } })
+                .post<Response>(`${this.baseUrl}${api}`, JSON.stringify(body), { headers: { 'Content-Type': 'application/json' } })
                 .subscribe({
                     next: (response: Response) => {
                         if ((response.generalResponse.isSuccess ?? false) === false) {
