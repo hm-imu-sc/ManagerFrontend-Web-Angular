@@ -122,7 +122,9 @@ export class TagManager implements OnInit {
         this.getAppsAsync().then(r => {
             if (r?.length ?? 0 > 0) {
                 this.apps$.next(r);
-                this.onAppClick(2);
+            }
+            else {
+                this._alertService.show("Apps not found", "failed")
             }
         });
     }
@@ -211,8 +213,8 @@ export class TagManager implements OnInit {
         this.disableEID();
     }
 
-    onTagClick(level: number, tagIndex: number): void {
-        this.levelWiseSelectedTagIdx[level] = tagIndex;
+    onTagClick(level: number, tagIdx: number): void {
+        this.levelWiseSelectedTagIdx[level] = tagIdx;
         this.unSelectLevelTag(level + 1);
         this.scrollRight();
     }

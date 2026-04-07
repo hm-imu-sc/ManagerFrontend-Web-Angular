@@ -16,11 +16,11 @@
     }
     @if (appTags$ | async) {
         <div #tagContainer class="flex flex-col gap-2 md:flex-row border-2 default-border-color rounded-xl mt-5 md:h-[75vh] p-2 overflow-x-scroll">
-            <!-- @if (((appTags$ | async)?.length ?? 0) === 0) {
+            @if (((appTags$ | async)?.length ?? 0) === 0) {
                 <div class="text-center w-full">
                     No tags to display.
                 </div>
-            } -->
+            }
             @for (lwt of levelWiseTags; track $index; let level = $index) {
                 @if (isShowLevel($index) && level > 0) {
                     <div class="tag-nest default-border-color shrink-0">
