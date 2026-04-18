@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { Login } from "../../components/login/login";
-import { Registration } from "../../components/registration/registration";
+import { Login } from "../../../components/login/login";
+import { Registration } from "../../../components/registration/registration";
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { PageExtensions } from '../../abstruct_classes/PageExtensions';
+import { PageExtensions } from '../../../abstruct_classes/PageExtensions';
 
 @Component({
     selector: 'app-login-registration',

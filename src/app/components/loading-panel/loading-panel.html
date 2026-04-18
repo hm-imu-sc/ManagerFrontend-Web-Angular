@@ -1,0 +1,32 @@
+<div class="relative">
+    <ng-content></ng-content>
+    @if (isShow) {
+        <div class="absolute inset-0 z-50 flex items-center justify-center">
+            <div class="absolute inset-0" style="
+                background-color: color-mix(
+                    in oklch,
+                    var(--default-background-color) 10%,
+                    black 20%
+                );
+                ">
+            </div>
+    
+            <div class="relative z-10 flex items-center justify-center">
+                <i
+                    class="fas fa-compact-disc animate-spin opacity-85"
+                    [class.text-5xl]="spinner === 'lg'"
+                    [class.text-2xl]="spinner === 'sm'"
+                    style="color: var(--default-text-color);">
+                </i>
+                @if (isLong) {
+                    <span 
+                        class="pointer-events-none"
+                        [class.text-2xl]="spinner === 'lg'"
+                        [class.text-lg]="spinner === 'sm'">
+                        &nbsp;&nbsp;Loading ...
+                    </span>
+                }
+            </div>
+        </div>
+    }
+</div>

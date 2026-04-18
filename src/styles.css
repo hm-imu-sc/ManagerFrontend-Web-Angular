@@ -31,11 +31,11 @@ body {
 }
 
 .input-basic {
-    @apply bg-gray-950 border-2 border-gray-800 rounded-md focus:outline-0 px-3 py-2.5 w-full;
+    @apply bg-gray-950 border-2 border-gray-800 rounded-2xl focus:outline-0 px-5 py-3 w-full;
 }
 
 .btn-basic {
-    @apply bg-gray-950 border-2 border-gray-800 px-3 py-2.5 rounded-md hover:bg-gray-800 w-full cursor-pointer text-center;
+    @apply bg-gray-950 border-2 border-gray-800 px-3 py-2.5 rounded-2xl hover:bg-gray-800 w-full cursor-pointer text-center;
 }
 
 .form-basic {
@@ -86,4 +86,35 @@ body {
 .disabled {
     pointer-events: none;
     opacity: 20%;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.clickable:active {
+    opacity: 80%;
+}
+
+.clickable:hover {
+    background-color: var(--default-border-color);
+    user-select: none;
+    cursor: pointer;
+}
+
+.clickable.selected {
+    background-color: var(--default-text-color);
+    color: var(--default-border-color);
+    border-color: var(--default-text-color);
+    pointer-events: none;
+    user-select: none;
+}
+
+.clickable.selected:hover {
+    background-color: var(--default-text-color);
+    color: var(--default-border-color);
+    border-color: var(--default-text-color);
+    cursor: auto;
 }

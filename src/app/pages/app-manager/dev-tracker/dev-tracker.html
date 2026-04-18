@@ -1,0 +1,25 @@
+<app-container>
+    <app-page-title>Development Tracker</app-page-title>
+    <br/>
+    <app-app-list (onAppClick)="onAppClick($event)"></app-app-list>
+    <br/>
+    <div class="p-2 rounded-lg flex flex-col gap-2">
+        @for (ticket of devTickets$ | async; track $index) {
+            <div 
+                class="border-2 default-border-color rounded-xl py-4 px-6 clickable overflow-hidden"
+                (click)="onTicketClick($index)"> 
+                {{ ticket.title }} 
+            </div>
+        }
+    </div>
+    @if (selectedTicketIdx !== dummy.int) {
+        <app-modal 
+            [title]="devTickets$.value[selectedTicketIdx].title" 
+            (closed)="selectedTicketIdx = dummy.int">
+            {{ devTickets$.value[selectedTicketIdx].description }}
+        </app-modal>
+    }
+</app-container>
+
+
+

@@ -1,0 +1,26 @@
+@if (isOpen) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60" (click)="close()">
+        <!-- Modal Box -->
+        <div class="modal-box" (click)="stopClick($event)">
+            <!-- Title Bar -->
+            <div class="title-bar">
+                <!-- Title -->
+                <h2 class="text-lg font-semibold">
+                    {{ title }}
+                </h2>
+
+                <!-- Close Button -->
+                <button
+                    class="close-button"
+                    (click)="close()">
+                    <i class="far fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-5">
+                <ng-content></ng-content>
+            </div>
+        </div>
+    </div>
+}

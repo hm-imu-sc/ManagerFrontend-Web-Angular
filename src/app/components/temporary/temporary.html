@@ -1,0 +1,17 @@
+<div class="flex flex-col align-middle m-10 gap-10">
+    <div class="flex justify-center gap-2 mx-auto">
+        <input class="input-basic" type="number" (input)="n = $any($event.target).value">
+        <button class="btn-basic" (click)="btnLoadOnClick()">Load</button>
+    </div>
+    
+    <div class="flex justify-center gap-5">
+        @for (i of ar; track $index) {
+            <input 
+                class="input-basic text-center" 
+                type="number" 
+                [placeholder]="$index"
+                [value]="ar[$index] === -1 ? '' : ar[$index]" 
+                (keyup)="setPos($any($event.target).value === '' ? -1 : +$any($event.target).value, $index)">
+        }
+    </div>
+</div>

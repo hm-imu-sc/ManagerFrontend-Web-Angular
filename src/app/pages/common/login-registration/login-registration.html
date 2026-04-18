@@ -1,0 +1,33 @@
+@if (showRegistration !== showLogin) {
+    <div class="md:hidden text-right mt-3 mr-2">
+        @if (showRegistration) {
+            <a class="text-sm text-gray-600 border-2 py-1 px-2 rounded-sm" href="login-registration/login">Login</a>
+        }
+        @if (showLogin) {
+            <a class="text-sm text-gray-600 border-2 py-1 px-2 rounded-sm" href="login-registration/registration">Register</a>
+        }
+    </div>
+}
+
+
+@if (showFormChooser) {
+    <div class="md:hidden flex flex-col gap-2 justify-center min-h-screen px-10">
+        <a class="btn-basic" href="login-registration/login">Login</a>
+        <a class="btn-basic" href="login-registration/registration">Registration</a>
+    </div>
+}
+
+@if (showForms) {
+    <div
+        class="flex flex-col md:flex-row-reverse justify-center gap-2 md:gap-20 md:items-center min-h-[80vh] md:min-h-screen mx-2">
+        @if (showLogin) {
+            <app-login class="lg:w-100 2xl:w-150"></app-login>
+        }
+        @if (isDesktop) {
+            <div class="md:h-150 md:w-px bg-gray-700"></div>
+        }
+        @if (showRegistration) {
+            <app-registration class="lg:w-100 2xl:w-150"></app-registration>
+        }
+    </div>
+}

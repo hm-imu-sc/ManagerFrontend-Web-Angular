@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+.modal-box {
+    @apply max-h-[80vh] max-w-[80vw] overflow-auto rounded-2xl border-2 shadow-xl;
+
+    border-color: var(--default-border-color);
+    background-color: var(--default-background-color);
+    color: var(--default-text-color);
+}
+
+.title-bar {
+    @apply sticky top-0 z-50 flex items-center justify-between border-b px-5 py-3;
+
+    user-select: none;
+    border-color: var(--default-border-color);
+    background-color: var(--default-background-color);
+}
+
+.close-button {
+    @apply flex h-9 w-9 items-center justify-center rounded-full border-0 text-lg font-bold hover:opacity-80;
+
+    cursor: pointer;
+    border-color: var(--default-border-color);
+    background-color: var(--default-background-color);
+    color: var(--default-text-color);
+}

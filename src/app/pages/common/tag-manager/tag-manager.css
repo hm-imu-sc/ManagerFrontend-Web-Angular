@@ -1,40 +1,6 @@
 
 @import "tailwindcss";
 
-.app-tab {
-    @apply border border-x-2 md:border-x md:border-y-2 py-2 px-5;
-    border-color: var(--default-border-color);
-}
-
-.app-tab:nth-child(1) {
-    @apply border-t-2 md:border-l-2 rounded-tl-lg md:rounded-bl-lg rounded-tr-lg md:rounded-tr-none;
-}
-
-.app-tab:nth-last-child(1) {
-    @apply border-b-2 md:border-r-2 rounded-br-lg md:rounded-tr-lg rounded-bl-lg md:rounded-bl-none;
-}
-
-.app-tab.selected {
-    background-color: var(--default-text-color);
-    color: var(--default-border-color);
-    border-color: var(--default-text-color);
-    pointer-events: none;
-    user-select: none;
-}
-
-.app-tab.selected:hover {
-    background-color: var(--default-text-color);
-    color: var(--default-border-color);
-    border-color: var(--default-text-color);
-    cursor: auto;
-}
-
-.app-tab:hover {
-    background-color: var(--default-border-color);
-    user-select: none;
-    cursor: pointer;
-}
-
 .tag {
     @apply p-3 border-2 text-left w-full md:max-w-75 min-w-45 rounded-l-lg cursor-pointer mr-0.5;
     border-color: var(--default-background-color);
@@ -127,4 +93,8 @@
 
 .tag-container {
     border: 2px solid red;
+}
+
+.placeholder {
+    @apply py-40 md:py-2;
 }

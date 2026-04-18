@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ApiService, GeneralResponse } from '../../services/api-service';
-import { AlertService } from '../../services/alert-service';
-
-type App = {
-    id: number,
-    name: string,
-    description: string
-}
+import { ApiService } from '../../../services/api-service';
+import { AlertService } from '../../../services/alert-service';
+import { PageTitle } from "../../../components/page-title/page-title";
+import { Dummy, Empty } from '../../../../constants';
+import { App, AppList } from '../../../components/app-list/app-list';
+import { Container } from "../../../components/container/container";
+import { LoadingPanel } from "../../../components/loading-panel/loading-panel";
 
 type Tag = {
     id: number,
@@ -35,15 +34,6 @@ class TagEID {
     reset() {
         this.set(0, Dummy.int, Empty.str);
     }
-}
-
-export class Dummy {
-    static readonly int = -1;
-}
-
-export class Empty {    
-    static readonly array: [] = [];
-    static readonly str: string = '';
 }
 
 class Mode {
@@ -94,14 +84,12 @@ class Mode {
 
 @Component({
     selector: 'app-tag-manager',
-    imports: [CommonModule],
+    imports: [CommonModule, PageTitle, AppList, Container, LoadingPanel],
     templateUrl: './tag-manager.html',
     styleUrl: './tag-manager.css',
 })
-export class TagManager implements OnInit {
-    apps$ = new BehaviorSubject<App[]>(Empty.array);
+export class TagManager {
     appTags$ = new BehaviorSubject<Tag[]>(Empty.array);
-    selectedAppIdx = Dummy.int;
     levelWiseTags: Tag[][] = Empty.array;
     levelWiseSelectedTagIdx: number[] = Empty.array;
     hasChild: {}[] = Empty.array;
@@ -109,8 +97,14 @@ export class TagManager implements OnInit {
     mode = new Mode();
     nextTagId = 100;
 
+    isTagLoading = false; 
+    isEIDLoading = false;
+
     @ViewChild('tagContainer')
     tagContainer!: ElementRef;
+
+    @ViewChild(AppList)
+    appList!: AppList
 
     constructor(
         private _apiService: ApiService,
@@ -118,39 +112,19 @@ export class TagManager implements OnInit {
         private _alertService: AlertService) {
     }
 
-    ngOnInit(): void {
-        this.getAppsAsync().then(r => {
-            if (r?.length ?? 0 > 0) {
-                this.apps$.next(r);
-            }
-            else {
-                this._alertService.show("Apps not found", "failed")
-            }
-        });
-    }
-
-    async getAppsAsync(): Promise<App[]> {
-        const api = '/api/App/getAllApps';
-        try {
-            const response = await this._apiService.get<{ apps?: App[] }>(api);
-            return response.apps!;
-        }
-        catch (error) {
-            console.log(`getApps(): ${error}`);            
-        }
-        return Empty.array;
-    }
-
     async getTagsAsync(appId: number): Promise<Tag[]> {
         const api = `/api/Tag/getTags/${appId}`;
+        let tags: Tag[] = Empty.array;
+        this.isTagLoading = true;
         try {
             const response = await this._apiService.get<{ tags?: Tag[] }>(api);
-            return response.tags!;
+            tags = response.tags!;
         }
         catch (error) {
             console.log(`getTagsAsync(): ${error}`);
         }
-        return Empty.array;
+        this.isTagLoading = false;
+        return tags;
     }
 
     prepareLevelWiseTags(tags: Tag[]): void {
@@ -196,14 +170,9 @@ export class TagManager implements OnInit {
         this.levelWiseSelectedTagIdx.push(Dummy.int);
     }
 
-    onAppClick(appIdx: number): void {
-        if (this.selectedAppIdx === appIdx) {
-            return;
-        }
-
-        this.selectedAppIdx = appIdx;
+    onAppClick(appId: number): void {
         this.clearTags();
-        this.getTagsAsync(this.apps$.getValue()[this.selectedAppIdx].id)
+        this.getTagsAsync(appId)
             .then(tags => {
                 if (tags.length > 0) {
                     this.prepareLevelWiseTags(tags);
@@ -267,6 +236,7 @@ export class TagManager implements OnInit {
 
     async insertTagAsync() {
         try {
+            debugger;
             const api = '/api/Tag/createTag';
             const level = this.tagEID.level;
     
@@ -280,7 +250,7 @@ export class TagManager implements OnInit {
                 name: this.tagEID.box,
                 parrentTagId: parentId,
                 app: {
-                    id: this.apps$.value[this.selectedAppIdx].id
+                    id: this.appList.selectedApp?.id
                 }
             }
 
@@ -338,6 +308,7 @@ export class TagManager implements OnInit {
     }
 
     async onSaveClickAsync(): Promise<void> {
+        this.isEIDLoading = true;
         if (this.mode.rename) {
             await this.renameTagAsync();
         }
@@ -347,6 +318,7 @@ export class TagManager implements OnInit {
         else if (this.mode.delete) {
             await this.deleteTagAsync();
         }
+        this.isEIDLoading = false;
     }
     
     onCancelClick(): void {
@@ -378,6 +350,10 @@ export class TagManager implements OnInit {
         return logic;
     }
     
+    isTagInFocus(level: number, tagIndex: number) {
+        return this.tagEID.level === level && this.tagEID.idx === tagIndex;
+    }
+
     isDirtyEID(): boolean {
         if (this.mode.insert || this.mode.delete) {
             return false;
