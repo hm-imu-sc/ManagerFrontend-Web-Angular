@@ -6,7 +6,6 @@ import { AlertService } from '../../../services/alert-service';
 import { PageTitle } from "../../../components/page-title/page-title";
 import { Dummy, Empty } from '../../../../constants';
 import { App, AppList } from '../../../components/app-list/app-list';
-import { Container } from "../../../components/container/container";
 import { LoadingPanel } from "../../../components/loading-panel/loading-panel";
 
 type Tag = {
@@ -84,7 +83,7 @@ class Mode {
 
 @Component({
     selector: 'app-tag-manager',
-    imports: [CommonModule, PageTitle, AppList, Container, LoadingPanel],
+    imports: [CommonModule, PageTitle, AppList, LoadingPanel],
     templateUrl: './tag-manager.html',
     styleUrl: './tag-manager.css',
 })

@@ -25,6 +25,7 @@
               }
             ],
             "styles": [
+              "src/material-theme.scss",
               "public/icons/font-awesome/css/all.css",
               "src/styles.css"
             ]

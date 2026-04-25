@@ -1,4 +1,4 @@
-<app-container class="p-2">
+<div class="app-container">
     <app-page-title>Tag Manager</app-page-title><br/>
     <app-app-list (onAppClick)="onAppClick($event)"></app-app-list>
     @if (appTags$ | async) {
@@ -7,7 +7,7 @@
                 class="flex flex-col gap-2 md:flex-row border-2 default-border-color rounded-xl mt-5 md:h-[75vh] p-2 overflow-x-scroll"
                 [class.placeholder]="isTagLoading">
                 @if (((appTags$ | async)?.length ?? 0) === 0 && !isTagLoading) {
-                    <div class="text-center w-full">
+                    <div class="placeholder">
                         No tags to display.
                     </div>
                 }
@@ -76,7 +76,7 @@
             </div>
         </app-loading-panel>
     }
-</app-container>
+</div>
 
 <ng-template #tagInsertRename>
     <input 

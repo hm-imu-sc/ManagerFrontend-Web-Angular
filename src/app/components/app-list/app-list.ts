@@ -20,6 +20,7 @@ export type App = {
 })
 export class AppList implements OnInit {
     readonly notFoundMessage = 'No apps found !';
+    readonly loadingText = 'Loading app list ...';
 
     dummy = Dummy;
 

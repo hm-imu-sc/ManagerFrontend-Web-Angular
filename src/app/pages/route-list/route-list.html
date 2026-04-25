@@ -1,0 +1,8 @@
+<div class="app-container">
+    <app-page-title>Route List</app-page-title>
+    <div class="list-view mt-10">
+        @for (route of allRoutes; track $index) {
+            <a class="btn-basic" routerLink="/{{route.path}}" >{{ route.title }}</a>
+        }
+    </div>
+</div>

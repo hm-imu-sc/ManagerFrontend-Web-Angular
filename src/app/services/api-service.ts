@@ -13,10 +13,10 @@ export type GeneralResponse = {
     providedIn: 'root',
 })
 export class ApiService {
-    // baseUrl: string = 'http://192.168.0.25:3000'; // DummyDb
+    // baseUrl: string = 'http://192.168.0.29:3000'; // DummyDb
     // baseUrl: string = 'https://localhost:5000'; // devlopment 
     baseUrl: string = 'http://192.168.0.26:8500'; // deployment 
-    // baseUrl: string = 'http://192.168.0.25:8500'; // devlopment(For Mobile)
+    // baseUrl: string = 'http://192.168.0.29:8500'; // devlopment(For Mobile)
 
     constructor(private http: HttpClient) {}
 

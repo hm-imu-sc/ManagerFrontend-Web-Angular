@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Empty } from '../../../constants';
 
 type SpinenrSize = 'sm' | 'lg';
 
@@ -13,4 +14,5 @@ export class LoadingPanel {
     @Input() isShow: boolean = false;
     @Input() isLong: boolean = false;
     @Input() spinner: SpinenrSize = 'sm';
+    @Input() loadingText: string = 'Loading ...';
 }

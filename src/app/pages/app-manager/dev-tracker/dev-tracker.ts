@@ -1,40 +1,58 @@
-import { Component, OnInit } from '@angular/core';
-import { Container } from "../../../components/container/container";
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { PageTitle } from "../../../components/page-title/page-title";
 import { AppList } from "../../../components/app-list/app-list";
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from "../../../components/modal/modal";
-import { Constants, Dummy, Empty } from '../../../../constants';
+import { Constants, } from '../../../../constants';
+import { DevTicketCard } from '../../../components/dev-ticket-card/dev-ticket-card';
+import { DevTools } from '../../../../dsa/dev-tools';
+import { DevTicketEditor } from "../../../components/dev-ticket-editor/dev-ticket-editor";
 
-type DevTickets = {
+export type DevTicketPriority = 'High' | 'Medium' | 'Low';
+
+export type DevTicketStatus = 'New' | 'In Progress' | 'Done';
+
+export type DevTicket = {
+    id: number,
     title: string,
-    description?: string
+    description?: string,
+    status: DevTicketStatus,
+    createdAt: Date,
+    startedAt?: Date,
+    completedAt?: Date,
+    priority: DevTicketPriority
 }
 
 @Component({
     selector: 'app-dev-tracker',
-    imports: [Container, PageTitle, AppList, CommonModule, Modal],
+    imports: [PageTitle, AppList, CommonModule, Modal, DevTicketCard, DevTicketEditor],
     templateUrl: './dev-tracker.html',
     styleUrl: './dev-tracker.css',
 })
 export class DevTracker extends Constants implements OnInit {
 
-    devTickets$ = new BehaviorSubject<DevTickets[]>([]);
+    devTickets$ = new BehaviorSubject<DevTicket[]>([]);
     selectedTicketIdx: number = this.dummy.int;
 
     ngOnInit(): void {
-        this.onAppClick(-1);
+        this.onAppClick(1);
     }
 
     onAppClick(appId: number): void {
-        let tickets: DevTickets[] = [];
+        let tickets: DevTicket[] = [];
         const desc = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, numquam accusamus laudantium architecto est, odit suscipit officia earum pariatur corrupti facilis. Quibusdam quod modi dolor iusto? Consectetur doloremque officia cumque?';
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < (appId * 3) + 4; i++) {
             tickets.push({
-                title: `Ticket ${i + 1}`,
-                description: desc
+                id: i,
+                title: `The standard Lorem Ipsum passage, used since the 1500s ${i + 1}`,
+                description: desc,
+                status: DevTools.chooseRandom(['New', 'In Progress', 'Done']),
+                createdAt: new Date('2026-01-01'),
+                completedAt: new Date('2026-01-01'),
+                startedAt: new Date('2026-01-01'),
+                priority: DevTools.chooseRandom(['High', 'Medium', 'Low'])
             });
         }
 

@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+.ticket-card {
+    @apply grid grid-cols-12;
+}
+
+.ticket-card > div {
+    @apply border-2 p-4 truncate;
+    border-color: var(--default-border-color);
+}
+
+.ticket-card > div.status {
+    @apply col-span-3 md:col-span-1 rounded-l-xl border-r text-center;   
+}
+
+.ticket-card > div.co-date {
+    @apply border-l border-r col-span-1 hidden md:inline text-center
+}
+
+.ticket-card > div.title {
+    @apply col-span-9 md:col-span-9 border-l md:border-r rounded-r-xl md:rounded-none;
+}
+
+.ticket-card > div.priority {
+    @apply border-l border-r col-span-1 hidden md:inline text-center rounded-r-xl;
+}

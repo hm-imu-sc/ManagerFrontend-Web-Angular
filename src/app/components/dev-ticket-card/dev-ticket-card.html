@@ -1,0 +1,19 @@
+<div class="ticket-card">
+    <div class="status">
+        <i class="fas {{ statusTextMap.get(devTicket.status)?.icon }} {{ statusTextMap.get(devTicket.status)?.color }}"></i> 
+        <span class="{{ statusTextMap.get(devTicket.status)?.color }} hidden md:inline">&nbsp;{{ devTicket.status }}</span>
+    </div>
+    <div class="co-date">
+        {{ statusCorrespondingDate | date:'MMM yy'  }}
+    </div>
+    <div 
+        class="title clickable"
+        (click)="doClick()"> 
+        {{ devTicket.title }} 
+    </div>
+    <div class="priority">
+        <app-badge [colorProfile]="priorityColorMap.get(devTicket.priority) ?? 'default'">
+            {{ devTicket.priority }}
+        </app-badge>
+    </div>
+</div>
