@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 .modal-box {
-    @apply max-h-[80vh] max-w-[80vw] overflow-auto rounded-2xl border-2 shadow-xl;
+    @apply max-h-[80vh] max-w-[90vw] md:max-w-[85vw] overflow-auto rounded-2xl border-2 shadow-xl;
 
     border-color: var(--default-border-color);
     background-color: var(--default-background-color);

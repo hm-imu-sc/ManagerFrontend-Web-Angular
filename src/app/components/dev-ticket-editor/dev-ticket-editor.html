@@ -1,1 +1,37 @@
-{{ devTicket.description }}
+<div class="flex flex-col gap-2">
+    <div class="flex justify-between flex-col md:flex-row gap-3">
+        <div class="md:w-4xs">
+            <button 
+                class="btn-basic clickable" 
+                [class.disabled]="devTicket.title === ''"
+                [class.hidden]="devTicket.status === 'Done'"
+                (click)="updateStatus()">
+                {{ statusActionMap.get(this.getTicketStatus()) }}
+            </button>
+        </div>
+        <app-option-chooser
+            [enabled]="devTicket.status !== 'Done'"
+            [options]="getDevTicketPriorities()"
+            [selectedId]="selectedPriorityId"
+            (onOptionClick)="updateDevTicketPriority($event)">
+        </app-option-chooser>
+    </div>
+    <input 
+        [class.disabled]="devTicket.status === 'Done'"
+        class="input-basic" 
+        type="text"
+        placeholder="Title"
+        [value]="devTicket.title"
+        (keyup)="updateTitle($event.target.value)">
+    <textarea 
+        class="border default-border-color py-2 px-3 rounded-lg min-w-full md:w-[70vw] h-[60vh] md:h-[40vh] focus:outline-0 resize-none"
+        placeholder="Description"
+        [class.disabled]="devTicket.status === 'Done'"
+        (keyup)="updateDescription($event)">{{ devTicket.description }}</textarea>
+    <button 
+        class="btn-basic clickable"
+        [class.disabled]="isCreatingNewTicket() || devTicket.status === 'Done'"
+        (click)="saveChanges()">
+        <i class="fas fa-save"></i>&nbsp;&nbsp;Save Changes
+    </button>
+</div>

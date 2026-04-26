@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
 import { Dummy, Empty } from '../../../constants';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { BaseComponent } from '../../abstruct_classes/BaseComponent';
 
 export type Option = {
     id: number,
@@ -14,12 +15,15 @@ export type Option = {
     templateUrl: './option-chooser.html',
     styleUrl: './option-chooser.css',
 })
-export class OptionChooser implements OnChanges {
+export class OptionChooser extends BaseComponent implements OnChanges {
     @Input()
     noOptMessage = '';
     
     @Input({required: true})
     options: Option[] = [];
+
+    @Input()
+    selectedId: number = Dummy.int;
 
     @Output()
     onOptionClick = new EventEmitter<number>();
@@ -31,6 +35,11 @@ export class OptionChooser implements OnChanges {
     selectedOpt?: Option;
     
     ngOnChanges(changes: SimpleChanges): void {
+        for (let index = 0; index < this.options.length; index++) {
+            if (this.options[index].id === this.selectedId) {
+                this.selectedOptIdx = index;
+            }
+        }
         this.opts$.next(this.options);
     }
 

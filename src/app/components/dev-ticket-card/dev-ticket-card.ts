@@ -8,6 +8,21 @@ type DevTicketStatusInfo = {
     color: string
 }
 
+export const DevTicketStatusTextMap = new Map<DevTicketStatus, DevTicketStatusInfo>([
+    ['New', {
+        icon: 'far fa-sparkles',
+        color: 'text-[dodgerblue]'
+    }], 
+    ['In Progress', {
+        icon: 'fad fa-cog animate-spin',
+        color: 'text-violet-700'
+    }], 
+    ['Done', {
+        icon: 'far fa-check',
+        color: 'text-green-700'
+    }]
+]);
+
 @Component({
     selector: 'app-dev-ticket-card',
     imports: [DatePipe, Badge],
@@ -15,7 +30,8 @@ type DevTicketStatusInfo = {
     styleUrl: './dev-ticket-card.css',
 })
 export class DevTicketCard implements OnInit {
-    statusTextMap = new Map<DevTicketStatus, DevTicketStatusInfo>();
+
+    statusTextMap = DevTicketStatusTextMap;
     priorityColorMap = new Map<DevTicketPriority, BadgeColorProfile>();
     statusCorrespondingDate?: Date;
 
@@ -26,19 +42,6 @@ export class DevTicketCard implements OnInit {
     onClick = new EventEmitter<number>();
 
     constructor() {
-        this.statusTextMap.set('New', {
-            icon: 'far fa-sparkles',
-            color: 'text-[dodgerblue]'
-        });
-        this.statusTextMap.set('In Progress', {
-            icon: 'fad fa-cog animate-spin',
-            color: 'text-violet-700'
-        });
-        this.statusTextMap.set('Done', {
-            icon: 'far fa-check',
-            color: 'text-green-700'
-        });
-
         this.priorityColorMap.set('High', 'violet');
         this.priorityColorMap.set('Medium', 'orange');
         this.priorityColorMap.set('Low', 'default');
