@@ -16,7 +16,7 @@ export type Option = {
 })
 export class OptionChooser implements OnChanges {
     @Input()
-    noOptMessage = 'No options !';
+    noOptMessage = '';
     
     @Input({required: true})
     options: Option[] = [];
