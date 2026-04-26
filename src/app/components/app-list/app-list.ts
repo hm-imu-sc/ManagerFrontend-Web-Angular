@@ -1,10 +1,11 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { Dummy, Empty } from '../../../constants';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../services/alert-service';
 import { ApiService } from '../../services/api-service';
 import { LoadingPanel } from "../loading-panel/loading-panel";
+import { OptionChooser } from "../option-chooser/option-chooser";
 
 export type App = {
     id: number,
@@ -14,7 +15,7 @@ export type App = {
 
 @Component({
     selector: 'app-app-list',
-    imports: [CommonModule, LoadingPanel],
+    imports: [CommonModule, LoadingPanel, OptionChooser],
     templateUrl: './app-list.html',
     styleUrl: './app-list.css',
 })
@@ -26,6 +27,7 @@ export class AppList implements OnInit {
 
     isLoading = false;
     apps$ = new BehaviorSubject<App[]>(Empty.array);
+    appOptions$ = this.apps$.pipe(map(apps => apps.map((app, idx) => ({ id: idx, name: app.name }))));
     selectedAppIdx = Dummy.int;
     selectedApp: App | undefined;
 

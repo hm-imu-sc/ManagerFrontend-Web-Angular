@@ -1,36 +1,6 @@
 <app-loading-panel [isShow]="isLoading" [isLong]="true" [loadingText]="loadingText">
-    <div 
-        class="flex flex-col md:flex-row justify-center">
-        @for (app of apps$ | async; track $index) {
-            <ng-container
-                [ngTemplateOutlet]="appTab"
-                [ngTemplateOutletContext]="{ appName: app.name, index: $index }">
-            </ng-container>
-        }
-        @if (apps$.value.length === 0 && !isLoading) {
-            <ng-container
-                [ngTemplateOutlet]="appTab"
-                [ngTemplateOutletContext]="{ appName: notFoundMessage, index: dummy.int }">
-            </ng-container>
-        }
-        @if (isLoading) {
-            <ng-container
-                [ngTemplateOutlet]="appTab"
-                [ngTemplateOutletContext]="{ appName: '', index: dummy.int }">
-            </ng-container>
-        }
-    </div>
+    <app-option-chooser
+        [options]="(appOptions$ | async) ?? []"
+        (onOptionClick)="selectApp($event)">
+    </app-option-chooser>
 </app-loading-panel>
-
-<ng-template #appTab let-appName="appName" let-index="index">
-    <button
-        type="button" 
-        class="app-tab"
-        [class.w-full]="isLoading"
-        [class.clickable]="!isLoading"
-        [class.selected]="selectedAppIdx !== dummy.int && index === selectedAppIdx"
-        [class.placeholder]="appName === ''"
-        (click)="selectApp(index)">
-        {{ appName }}
-    </button>
-</ng-template>
