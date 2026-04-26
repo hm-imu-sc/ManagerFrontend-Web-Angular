@@ -1,4 +1,13 @@
 <app-page-title>Design</app-page-title>
 <br/>
-<app-app-list>
-</app-app-list>
+<div class="app-container">
+    <app-loading-panel [isShow]="getOptions().length === 0" [isLong]="true" loadingText="Loading options ...">
+        <app-option-chooser 
+            [options]="getOptions()"
+            [noOptMessage]="''"
+            (onOptionClick)="onOptionClick($event)">
+        </app-option-chooser>
+    </app-loading-panel>
+    <br>
+    <app-app-list></app-app-list>
+</div>

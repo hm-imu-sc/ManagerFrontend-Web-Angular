@@ -1,7 +1,7 @@
 <div class="ticket-card">
     <div class="status">
-        <i class="fas {{ statusTextMap.get(devTicket.status)?.icon }} {{ statusTextMap.get(devTicket.status)?.color }}"></i> 
-        <span class="{{ statusTextMap.get(devTicket.status)?.color }} hidden md:inline">&nbsp;{{ devTicket.status }}</span>
+        <i class="fas {{ statusTextMap.get(devTicket.status.id)?.icon }} {{ statusTextMap.get(devTicket.status.id)?.color }}"></i> 
+        <span class="{{ statusTextMap.get(devTicket.status.id)?.color }} hidden md:inline">&nbsp;{{ devTicket.status.name }}</span>
     </div>
     <div class="co-date">
         {{ statusCorrespondingDate | date:'MMM yy'  }}
@@ -12,8 +12,8 @@
         {{ devTicket.title }} 
     </div>
     <div class="priority">
-        <app-badge [colorProfile]="priorityColorMap.get(devTicket.priority) ?? 'default'">
-            {{ devTicket.priority }}
+        <app-badge [colorProfile]="priorityColorMap.get(devTicket.priority.id) ?? 'default'">
+            {{ devTicket.priority.name }}
         </app-badge>
     </div>
 </div>

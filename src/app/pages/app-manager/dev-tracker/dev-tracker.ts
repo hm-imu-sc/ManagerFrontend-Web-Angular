@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PageTitle } from "../../../components/page-title/page-title";
 import { AppList } from "../../../components/app-list/app-list";
 import { BehaviorSubject } from 'rxjs';
@@ -8,24 +8,11 @@ import { Constants, Dummy, } from '../../../../constants';
 import { DevTicketCard } from '../../../components/dev-ticket-card/dev-ticket-card';
 import { DevTools } from '../../../../dsa/dev-tools';
 import { DevTicketEditor } from "../../../components/dev-ticket-editor/dev-ticket-editor";
-
-export const DevTicketPriorities = ['High', 'Medium', 'Low'] as const;
-export type DevTicketPriority = typeof DevTicketPriorities[number];
-
-export const DevTicketStatuses = ['New', 'In Progress', 'Done'] as const;
-export type DevTicketStatus = typeof DevTicketStatuses[number];
-
-export type DevTicket = {
-    id: number,
-    appId: number,
-    title: string,
-    description?: string,
-    status: DevTicketStatus,
-    createdAt: Date,
-    startedAt?: Date,
-    completedAt?: Date,
-    priority: DevTicketPriority
-}
+import { ApiService } from '../../../services/api-service';
+import { AlertService } from '../../../services/alert-service';
+import { DevTicket } from '../../../types/DevTicket';
+import { DevTicketStatuses } from '../../../types/DevTicketStatuses';
+import { DevTicketPriorities } from '../../../types/DevTicketPriority';
 
 @Component({
     selector: 'app-dev-tracker',
@@ -46,10 +33,14 @@ export class DevTracker extends Constants implements OnInit {
         id: Dummy.int,
         appId: Dummy.int,
         title: this.empty.str,
-        status: 'New',
+        status: DevTicketStatuses[0],
         createdAt: new Date(Date.now()),
-        priority: 'Medium'
+        priority: DevTicketPriorities[1] // Setting medium priotiry as default
     }
+
+    constructor(
+        public _apiService: ApiService,
+        public _alertService: AlertService) { super(); }
 
     ngOnInit(): void {
         this.onAppClick(1);
@@ -64,12 +55,12 @@ export class DevTracker extends Constants implements OnInit {
                 id: i,
                 appId: appId,
                 title: `The standard Lorem Ipsum passage, used since the 1500s ${i + 1}`,
-                description: desc,
-                status: DevTools.chooseRandom(['New', 'In Progress', 'Done']),
+                developmentDetails: desc,
+                status: DevTicketStatuses[DevTools.chooseRandom([1, 2, 3])],
                 createdAt: new Date('2026-01-01'),
                 completedAt: new Date('2026-01-01'),
                 startedAt: new Date('2026-01-01'),
-                priority: DevTools.chooseRandom(['High', 'Medium', 'Low'])
+                priority: DevTicketPriorities[DevTools.chooseRandom([1, 2, 0])]
             });
         }
 
@@ -83,12 +74,12 @@ export class DevTracker extends Constants implements OnInit {
 
     getDevTicketEditorTitle() {
         const ticket = this.selectedTicketIdx === Dummy.int ? this.newTicket : this.devTickets$.value[this.selectedTicketIdx];
-        return `${this.selectedTicketIdx === Dummy.int ? 'Creating' : ticket.status} - ${ticket.title}`;
+        return `${this.selectedTicketIdx === Dummy.int ? 'Creating' : ticket.status.name} - ${ticket.title}`;
     }
 
     getSelectedDevTicket(): DevTicket {
         if (this.selectedTicketIdx !== Dummy.int) {
-            return this.devTickets$.value[this.selectedTicketIdx]
+            return this.devTickets$.value[this.selectedTicketIdx];
         }
         return this.newTicket;
     }
@@ -103,13 +94,41 @@ export class DevTracker extends Constants implements OnInit {
         this.selectedTicketIdx = Dummy.int;
     }
 
-    createNewTicket(newTicket: DevTicket) {
-        newTicket.id = this.nextTicketId++;
-        newTicket.appId = this.appList.selectedApp?.id ?? Dummy.int;
-        const allTickets = this.devTickets$.value;
-        allTickets.push(newTicket);
-        this.devTickets$.next(allTickets);
-        this.selectedTicketIdx = allTickets.length - 1;
-        this.isOpenTicketEditor = true;
+    async createNewTicket(newTicket: DevTicket) {
+
+        try {
+            const api = '/api/DevTicket/createDevTicket';
+
+            newTicket.appId = this.appList.selectedApp?.id ?? Dummy.int;
+
+            const body = {
+                "title": newTicket.title,
+                "developmentDetails": newTicket.developmentDetails,
+                "appId": newTicket.appId,
+                "statusId": newTicket.status.id,
+                "priorityId": newTicket.priority.id
+              }
+
+            const response = await this._apiService.post<{ devTicketId?: number }>(api, body);
+
+            if (response.generalResponse.isSuccess) {
+                newTicket.id = response.devTicketId!;
+                const allTickets = this.devTickets$.value;
+                allTickets.push(newTicket);
+                this.devTickets$.next(allTickets);
+                this.selectedTicketIdx = allTickets.length - 1;
+                this.isOpenTicketEditor = true;
+
+                this._alertService.show(`Success: ${response.devTicketId}`);
+                console.log(response);
+            }
+            else {
+                throw new Error(response.generalResponse.message); 
+            }
+        }
+        catch (error) {
+            this._alertService.show(String(error), 'failed');
+            console.log(`createNewTicket(): ${error}`);    
+        }
     }
 }

@@ -235,7 +235,6 @@ export class TagManager {
 
     async insertTagAsync() {
         try {
-            debugger;
             const api = '/api/Tag/createTag';
             const level = this.tagEID.level;
     

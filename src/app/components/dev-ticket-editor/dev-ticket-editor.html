@@ -3,21 +3,21 @@
         <div class="md:w-4xs">
             <button 
                 class="btn-basic clickable" 
-                [class.disabled]="devTicket.title === ''"
-                [class.hidden]="devTicket.status === 'Done'"
+                [class.disabled]="isEmptyTitle()"
+                [class.hidden]="isDoneStatus()"
                 (click)="updateStatus()">
-                {{ statusActionMap.get(this.getTicketStatus()) }}
+                {{ statusActionMap.get(devTicket.status.id) }}
             </button>
         </div>
         <app-option-chooser
-            [enabled]="devTicket.status !== 'Done'"
+            [enabled]="!isDoneStatus()"
             [options]="getDevTicketPriorities()"
             [selectedId]="selectedPriorityId"
             (onOptionClick)="updateDevTicketPriority($event)">
         </app-option-chooser>
     </div>
     <input 
-        [class.disabled]="devTicket.status === 'Done'"
+        [class.disabled]="isDoneStatus()"
         class="input-basic" 
         type="text"
         placeholder="Title"
@@ -26,11 +26,11 @@
     <textarea 
         class="border default-border-color py-2 px-3 rounded-lg min-w-full md:w-[70vw] h-[60vh] md:h-[40vh] focus:outline-0 resize-none"
         placeholder="Description"
-        [class.disabled]="devTicket.status === 'Done'"
-        (keyup)="updateDescription($event)">{{ devTicket.description }}</textarea>
+        [class.disabled]="isDoneStatus()"
+        (keyup)="updateDescription($event)">{{ devTicket.developmentDetails }}</textarea>
     <button 
         class="btn-basic clickable"
-        [class.disabled]="isCreatingNewTicket() || devTicket.status === 'Done'"
+        [class.disabled]="isCreatingNewTicket() || isDoneStatus()"
         (click)="saveChanges()">
         <i class="fas fa-save"></i>&nbsp;&nbsp;Save Changes
     </button>
