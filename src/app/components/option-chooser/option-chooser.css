@@ -1,0 +1,23 @@
+
+@import "tailwindcss";
+
+.opt-tab {
+    @apply border border-x-2 md:border-x md:border-y-2 py-2 px-5;
+    border-color: var(--default-border-color);
+}
+
+.opt-tab:nth-child(1) {
+    @apply border-t-2 md:border-l-2 rounded-tl-lg md:rounded-bl-lg rounded-tr-lg md:rounded-tr-none;
+}
+
+.opt-tab:nth-last-child(1) {
+    @apply border-b-2 md:border-r-2 rounded-br-lg md:rounded-tr-lg rounded-bl-lg;
+}
+
+.opt-tab:not(:first-child):nth-last-child(1) {
+    @apply md:rounded-bl-none;
+}
+
+.opt-tab.placeholder {
+    @apply px-20 py-5;
+}
