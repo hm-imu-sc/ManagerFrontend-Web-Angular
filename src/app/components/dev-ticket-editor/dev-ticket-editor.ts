@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Option, OptionChooser } from "../option-chooser/option-chooser";
-import { Dummy } from '../../../constants';
+import { Dummy, Empty } from '../../../constants';
 import { UtilityService } from '../../services/utility-service';
 import { DevTicket } from '../../types/DevTicket';
-import { DevTicketStatus, DevTicketStatuses } from '../../types/DevTicketStatuses';
-import { DevTicketPriorities } from '../../types/DevTicketPriority';
+import { DevTicketStatusEnum } from '../../types/DevTicketStatuses';
+import { DevTicketPriorities, DevTicketPriorityEnum } from '../../types/DevTicketPriority';
+import { DevTicketService } from '../../services/dev-ticket-service';
+import { marked } from 'marked';
 
 export const StatusUpdateActionTexts = ['Create', 'Start', 'Finish'] as const;
 export type StatusUpdateActionText = typeof StatusUpdateActionTexts[number];
@@ -24,45 +26,45 @@ export class DevTicketEditor {
 
     selectedPriorityId: number = Dummy.int;
     updateStatusText: StatusUpdateActionText = 'Create';
-    nextStatusMap = new Map<number, DevTicketStatus>([
-        [DevTicketStatuses[0].id /* Creating */, DevTicketStatuses[1] /* New */],
-        [DevTicketStatuses[1].id /* New */, DevTicketStatuses[2]] /* In Progrss */,
-        [DevTicketStatuses[2].id /* In Progrss */, DevTicketStatuses[3]] /* Done */
-    ]);
+
+    previewMarkdown = false;
 
     statusActionMap = new Map<number, StatusUpdateActionText>([
-        [DevTicketStatuses[0].id /* Creating */, 'Create'],
-        [DevTicketStatuses[1].id /* New */, 'Start'],
-        [DevTicketStatuses[2].id, /* In Progrss */ 'Finish']
+        [DevTicketStatusEnum.Creating, 'Create'],
+        [DevTicketStatusEnum.New, 'Start'],
+        [DevTicketStatusEnum.InProgress, 'Finish']
     ]);
 
-    constructor(public _utilService: UtilityService) {}
+    constructor(
+        public _utilService: UtilityService,
+        public _devTicketService: DevTicketService) { }
 
     getDevTicketPriorities(): Option[] {
-        return DevTicketPriorities.map((dtp, idx) => {
-            if (dtp === this.devTicket.priority) {
+        let priorityOptions = DevTicketPriorities.map((dtp, idx) => {
+            if (dtp.id === this.devTicket.priority) {
                 this.selectedPriorityId = idx;
             }
             return { id: idx, name: dtp.name };
         });
+        return priorityOptions.splice(1);
     }
 
     updateStatus(): void {
-        this.devTicket.status = this.nextStatusMap.get(this.devTicket.status.id)!;
+        this.devTicket.status = this._devTicketService.getNextStatus(this.devTicket).id;
         if (this.isCreatingNewTicket()) {
             this.onCreateNewTicket.emit(this.devTicket);
         }
     }
 
-    updateDevTicketPriority(priorityIdx: number) {
-        this.devTicket.priority = DevTicketPriorities[priorityIdx];
+    updateDevTicketPriority(priorityEnum: DevTicketPriorityEnum) {
+        this.devTicket.priority = DevTicketPriorities[priorityEnum].id;
     }
 
     updateTitle(newTitle: string) {
         this.devTicket.title = newTitle;
     }
 
-    updateDescription(evt: KeyboardEvent) {
+    updateDescription(evt: Event) {
         this.devTicket.developmentDetails = (evt.target as HTMLTextAreaElement).value;
     }
 
@@ -75,10 +77,18 @@ export class DevTicketEditor {
     }
 
     isDoneStatus() {
-        return this.devTicket.status.id === DevTicketStatuses[3].id /* Done status */;
+        return this.devTicket.status === DevTicketStatusEnum.Done;
     }
 
     isEmptyTitle() {
         return this._utilService.isNullOrEmpty(this.devTicket.title);
+    }
+
+    toggleMarkdown(): void {
+        this.previewMarkdown = !this.previewMarkdown;
+    }
+
+    renderMarkdownDevelopmentDetails() {
+        return marked(this.devTicket.developmentDetails ?? Empty.str);
     }
 }

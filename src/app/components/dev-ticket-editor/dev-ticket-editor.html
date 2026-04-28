@@ -6,7 +6,7 @@
                 [class.disabled]="isEmptyTitle()"
                 [class.hidden]="isDoneStatus()"
                 (click)="updateStatus()">
-                {{ statusActionMap.get(devTicket.status.id) }}
+                {{ statusActionMap.get(_devTicketService.getStatus(devTicket).id) }}
             </button>
         </div>
         <app-option-chooser
@@ -16,18 +16,37 @@
             (onOptionClick)="updateDevTicketPriority($event)">
         </app-option-chooser>
     </div>
-    <input 
-        [class.disabled]="isDoneStatus()"
-        class="input-basic" 
-        type="text"
-        placeholder="Title"
-        [value]="devTicket.title"
-        (keyup)="updateTitle($event.target.value)">
+    <div class="flex flex-col md:flex-row gap-2">
+        <input 
+            class="input-basic md:flex-11"     
+            [class.disabled]="isDoneStatus()"
+            type="text"
+            placeholder="Title"
+            [value]="devTicket.title"
+            (input)="updateTitle($event.target.value)">
+        <button
+            class="btn-basic md:flex-1 text-lg md:text-xl"
+            (click)="toggleMarkdown()">
+            <i 
+                class="fas fa-eye"
+                [hidden]="!previewMarkdown"></i>
+            <i 
+                class="fas fa-eye-slash"
+                [hidden]="previewMarkdown"></i>
+        </button>
+    </div>
     <textarea 
         class="border default-border-color py-2 px-3 rounded-lg min-w-full md:w-[70vw] h-[60vh] md:h-[40vh] focus:outline-0 resize-none"
         placeholder="Description"
         [class.disabled]="isDoneStatus()"
-        (keyup)="updateDescription($event)">{{ devTicket.developmentDetails }}</textarea>
+        [disabled]="previewMarkdown"
+        [hidden]="previewMarkdown"
+        (input)="updateDescription($event)">{{ devTicket.developmentDetails }}</textarea>
+    <div 
+        class="border default-border-color py-2 px-3 rounded-lg min-w-full md:w-[70vw] h-[60vh] md:h-[40vh] focus:outline-0 resize-none"
+        [hidden]="!previewMarkdown"
+        [innerHTML]="renderMarkdownDevelopmentDetails()">
+    </div>
     <button 
         class="btn-basic clickable"
         [class.disabled]="isCreatingNewTicket() || isDoneStatus()"

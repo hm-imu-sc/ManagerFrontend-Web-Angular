@@ -1,16 +1,10 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { BadgeColorProfile } from '../../types/BadgeColorProfile';
 
 type BadgeProfileColor = {
     backgroundColor: string,
     textColor: string
 }
-
-export type BadgeColorProfile = 'default'
-    | 'red'
-    | 'lime'
-    | 'violet'
-    | 'orange'
-    | 'custom'
 
 @Component({
     selector: 'app-badge',

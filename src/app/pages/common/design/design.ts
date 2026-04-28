@@ -10,7 +10,7 @@ type d = { id: number, title: string }
 
 @Component({
     selector: 'app-design',
-    imports: [AppList, Modal, PageTitle, OptionChooser, LoadingPanel],
+    imports: [AppList, PageTitle, OptionChooser, LoadingPanel],
     templateUrl: './design.html',
     styleUrl: './design.css',
 })

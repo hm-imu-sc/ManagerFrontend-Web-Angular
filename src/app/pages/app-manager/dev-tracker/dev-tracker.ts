@@ -1,18 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PageTitle } from "../../../components/page-title/page-title";
 import { AppList } from "../../../components/app-list/app-list";
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from "../../../components/modal/modal";
-import { Constants, Dummy, } from '../../../../constants';
+import { Dummy, Empty, } from '../../../../constants';
 import { DevTicketCard } from '../../../components/dev-ticket-card/dev-ticket-card';
-import { DevTools } from '../../../../dsa/dev-tools';
 import { DevTicketEditor } from "../../../components/dev-ticket-editor/dev-ticket-editor";
 import { ApiService } from '../../../services/api-service';
 import { AlertService } from '../../../services/alert-service';
 import { DevTicket } from '../../../types/DevTicket';
-import { DevTicketStatuses } from '../../../types/DevTicketStatuses';
-import { DevTicketPriorities } from '../../../types/DevTicketPriority';
+import { DevTicketStatusEnum } from '../../../types/DevTicketStatuses';
+import { DevTicketPriorities, DevTicketPriorityEnum } from '../../../types/DevTicketPriority';
+import { UtilityService } from '../../../services/utility-service';
+import { DevTicketService } from '../../../services/dev-ticket-service';
 
 @Component({
     selector: 'app-dev-tracker',
@@ -20,50 +21,26 @@ import { DevTicketPriorities } from '../../../types/DevTicketPriority';
     templateUrl: './dev-tracker.html',
     styleUrl: './dev-tracker.css',
 })
-export class DevTracker extends Constants implements OnInit {
+export class DevTracker {
 
     @ViewChild(AppList)
-    appList!: AppList;
+    appList?: AppList;
 
-    nextTicketId: number = 100;
     devTickets$ = new BehaviorSubject<DevTicket[]>([]);
     selectedTicketIdx: number = Dummy.int;
     isOpenTicketEditor: boolean = false;
-    newTicket: DevTicket = {
-        id: Dummy.int,
-        appId: Dummy.int,
-        title: this.empty.str,
-        status: DevTicketStatuses[0],
-        createdAt: new Date(Date.now()),
-        priority: DevTicketPriorities[1] // Setting medium priotiry as default
-    }
+    newTicket: DevTicket
 
     constructor(
         public _apiService: ApiService,
-        public _alertService: AlertService) { super(); }
-
-    ngOnInit(): void {
-        this.onAppClick(1);
+        public _alertService: AlertService,
+        public _utilService: UtilityService,
+        public _devTicketService: DevTicketService) { 
+        this.newTicket = _devTicketService.getNewDevTicket();
     }
 
-    onAppClick(appId: number): void {
-        let tickets: DevTicket[] = [];
-        const desc = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat, numquam accusamus laudantium architecto est, odit suscipit officia earum pariatur corrupti facilis. Quibusdam quod modi dolor iusto? Consectetur doloremque officia cumque?';
-
-        for (let i = 0; i < (appId * 3) + 4; i++) {
-            tickets.push({
-                id: i,
-                appId: appId,
-                title: `The standard Lorem Ipsum passage, used since the 1500s ${i + 1}`,
-                developmentDetails: desc,
-                status: DevTicketStatuses[DevTools.chooseRandom([1, 2, 3])],
-                createdAt: new Date('2026-01-01'),
-                completedAt: new Date('2026-01-01'),
-                startedAt: new Date('2026-01-01'),
-                priority: DevTicketPriorities[DevTools.chooseRandom([1, 2, 0])]
-            });
-        }
-
+    async onAppClick(appId: number) {
+        const tickets = await this.getDevTicketsAsync(appId);
         this.devTickets$.next(tickets);
     }
 
@@ -74,7 +51,7 @@ export class DevTracker extends Constants implements OnInit {
 
     getDevTicketEditorTitle() {
         const ticket = this.selectedTicketIdx === Dummy.int ? this.newTicket : this.devTickets$.value[this.selectedTicketIdx];
-        return `${this.selectedTicketIdx === Dummy.int ? 'Creating' : ticket.status.name} - ${ticket.title}`;
+        return `${this.selectedTicketIdx === Dummy.int ? 'Creating' : this._devTicketService.getStatus(ticket).name} - ${ticket.title}`;
     }
 
     getSelectedDevTicket(): DevTicket {
@@ -85,6 +62,7 @@ export class DevTracker extends Constants implements OnInit {
     }
 
     closeModal() {
+        this.newTicket = this._devTicketService.getNewDevTicket();
         this.selectedTicketIdx = Dummy.int;
         this.isOpenTicketEditor = false;
     }
@@ -94,19 +72,18 @@ export class DevTracker extends Constants implements OnInit {
         this.selectedTicketIdx = Dummy.int;
     }
 
-    async createNewTicket(newTicket: DevTicket) {
-
+    async createNewTicketAsync(newTicket: DevTicket) {
         try {
             const api = '/api/DevTicket/createDevTicket';
 
-            newTicket.appId = this.appList.selectedApp?.id ?? Dummy.int;
+            newTicket.appId = this.appList?.selectedApp?.id ?? Dummy.int;
 
             const body = {
                 "title": newTicket.title,
                 "developmentDetails": newTicket.developmentDetails,
                 "appId": newTicket.appId,
-                "statusId": newTicket.status.id,
-                "priorityId": newTicket.priority.id
+                "statusId": this._devTicketService.getStatus(newTicket).id,
+                "priorityId": DevTicketPriorities[newTicket.priority].id
               }
 
             const response = await this._apiService.post<{ devTicketId?: number }>(api, body);
@@ -119,7 +96,7 @@ export class DevTracker extends Constants implements OnInit {
                 this.selectedTicketIdx = allTickets.length - 1;
                 this.isOpenTicketEditor = true;
 
-                this._alertService.show(`Success: ${response.devTicketId}`);
+                this._alertService.show(`Created new ticket.`, 'success');
                 console.log(response);
             }
             else {
@@ -130,5 +107,23 @@ export class DevTracker extends Constants implements OnInit {
             this._alertService.show(String(error), 'failed');
             console.log(`createNewTicket(): ${error}`);    
         }
+    }
+
+    async getDevTicketsAsync(appId: number): Promise<DevTicket[]> {
+        const api = `/api/DevTicket/getDevTickets/${appId}`;
+        let devTickets: DevTicket[] = [];
+        try {
+            const response = await this._apiService.get<{ devTickets: DevTicket[] }>(api);
+            devTickets = response.devTickets;
+        }
+        catch (error) {
+            this._alertService.show(String(error), 'failed');
+            console.log(`getDevTicketsAsync(): ${error}`);
+        }
+        return devTickets;
+    }
+
+    isAppSelected(): boolean {
+        return !this._utilService.isDummyOrUndefined(this.appList?.selectedAppIdx);
     }
 }

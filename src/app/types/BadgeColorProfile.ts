@@ -1,0 +1,6 @@
+export type BadgeColorProfile = 'default'
+    | 'red'
+    | 'lime'
+    | 'violet'
+    | 'orange'
+    | 'custom'

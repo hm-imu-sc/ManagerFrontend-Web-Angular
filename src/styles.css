@@ -125,6 +125,20 @@ input[type="number"]::-webkit-inner-spin-button {
     cursor: auto;
 }
 
+.clickable.togglable {
+    background-color: var(--default-text-color);
+    color: var(--default-border-color);
+    border-color: var(--default-text-color);
+}
+
+.clickable.togglable:hover {
+    opacity: 90%;
+}
+
+.clickable.togglable:active {
+    opacity: 80%;
+}
+
 .list-view {
     @apply grid grid-cols-1 md:grid-cols-6 gap-2 md:gap-5 justify-around
 }
