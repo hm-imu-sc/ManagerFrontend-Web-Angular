@@ -4,4 +4,7 @@ import { Directive, Input } from "@angular/core";
 export abstract class BaseComponent {
     @Input()
     enabled: boolean = true;
+
+    @Input()
+    readonly: boolean = false;
 }

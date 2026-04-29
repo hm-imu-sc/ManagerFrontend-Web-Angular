@@ -7,6 +7,7 @@ import { PageTitle } from "../../../components/page-title/page-title";
 import { Dummy, Empty } from '../../../../constants';
 import { App, AppList } from '../../../components/app-list/app-list';
 import { LoadingPanel } from "../../../components/loading-panel/loading-panel";
+import { UtilityService } from '../../../services/utility-service';
 
 type Tag = {
     id: number,
@@ -108,7 +109,8 @@ export class TagManager {
     constructor(
         private _apiService: ApiService,
         private _cdr: ChangeDetectorRef,
-        private _alertService: AlertService) {
+        private _alertService: AlertService,
+        private _utilService: UtilityService) {
     }
 
     async getTagsAsync(appId: number): Promise<Tag[]> {
@@ -173,10 +175,11 @@ export class TagManager {
         this.clearTags();
         this.getTagsAsync(appId)
             .then(tags => {
-                if (tags.length > 0) {
-                    this.prepareLevelWiseTags(tags);
-                    this.appTags$.next(tags);
+                if (this._utilService.isNullOrUndefined(tags)) {
+                    tags = [];
                 }
+                this.prepareLevelWiseTags(tags);
+                this.appTags$.next(tags);
             });
         this.disableEID();
     }

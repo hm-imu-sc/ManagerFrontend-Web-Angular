@@ -10,16 +10,16 @@
             </button>
         </div>
         <app-option-chooser
-            [enabled]="!isDoneStatus()"
+            [readonly]="isDoneStatus()"
             [options]="getDevTicketPriorities()"
             [selectedId]="selectedPriorityId"
-            (onOptionClick)="updateDevTicketPriority($event)">
+            (onOptionClick)="updatePriorityAsync($event)">
         </app-option-chooser>
     </div>
     <div class="flex flex-col md:flex-row gap-2">
         <input 
             class="input-basic md:flex-11"     
-            [class.disabled]="isDoneStatus()"
+            [class.readonly]="isDoneStatus()"
             type="text"
             placeholder="Title"
             [value]="devTicket.title"
@@ -38,7 +38,7 @@
     <textarea 
         class="border default-border-color py-2 px-3 rounded-lg min-w-full md:w-[70vw] h-[60vh] md:h-[40vh] focus:outline-0 resize-none"
         placeholder="Description"
-        [class.disabled]="isDoneStatus()"
+        [class.readonly]="isDoneStatus()"
         [disabled]="previewMarkdown"
         [hidden]="previewMarkdown"
         (input)="updateDescription($event)">{{ devTicket.developmentDetails }}</textarea>
@@ -49,8 +49,9 @@
     </div>
     <button 
         class="btn-basic clickable"
-        [class.disabled]="isCreatingNewTicket() || isDoneStatus()"
-        (click)="saveChanges()">
+        [class.disabled]="isCreatingNewTicket() || !hasPendingChanges() || isEmptyTitle()"
+        [hidden]="isDoneStatus()"
+        (click)="saveChangesAsync()">
         <i class="fas fa-save"></i>&nbsp;&nbsp;Save Changes
     </button>
 </div>

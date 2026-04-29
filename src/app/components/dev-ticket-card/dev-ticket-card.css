@@ -14,7 +14,7 @@
 }
 
 .ticket-card > div.co-date {
-    @apply border-l border-r col-span-1 hidden md:inline text-center
+    @apply border-l border-r col-span-1 hidden md:inline text-center rounded-r-xl;
 }
 
 .ticket-card > div.title {
@@ -22,5 +22,5 @@
 }
 
 .ticket-card > div.priority {
-    @apply border-l border-r col-span-1 hidden md:inline text-center rounded-r-xl;
+    @apply border-l border-r col-span-1 hidden md:inline text-center
 }

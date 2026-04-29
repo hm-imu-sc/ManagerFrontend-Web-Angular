@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, output, ViewChild } from '@angular/core';
 import { PageTitle } from "../../../components/page-title/page-title";
 import { AppList } from "../../../components/app-list/app-list";
 import { BehaviorSubject } from 'rxjs';
@@ -25,6 +25,9 @@ export class DevTracker {
 
     @ViewChild(AppList)
     appList?: AppList;
+
+    @ViewChild(DevTicketEditor)
+    devTicketEditor?: DevTicketEditor;
 
     devTickets$ = new BehaviorSubject<DevTicket[]>([]);
     selectedTicketIdx: number = Dummy.int;
@@ -61,7 +64,8 @@ export class DevTracker {
         return this.newTicket;
     }
 
-    closeModal() {
+    closeDevTicketEditor() {
+        this.devTicketEditor?.onEditorClose();
         this.newTicket = this._devTicketService.getNewDevTicket();
         this.selectedTicketIdx = Dummy.int;
         this.isOpenTicketEditor = false;
@@ -82,17 +86,22 @@ export class DevTracker {
                 "title": newTicket.title,
                 "developmentDetails": newTicket.developmentDetails,
                 "appId": newTicket.appId,
-                "statusId": this._devTicketService.getStatus(newTicket).id,
+                "statusId": DevTicketStatusEnum.New,
                 "priorityId": DevTicketPriorities[newTicket.priority].id
               }
 
             const response = await this._apiService.post<{ devTicketId?: number }>(api, body);
 
             if (response.generalResponse.isSuccess) {
+                newTicket.status = DevTicketStatusEnum.New;
                 newTicket.id = response.devTicketId!;
+
                 const allTickets = this.devTickets$.value;
+                
                 allTickets.push(newTicket);
+
                 this.devTickets$.next(allTickets);
+
                 this.selectedTicketIdx = allTickets.length - 1;
                 this.isOpenTicketEditor = true;
 

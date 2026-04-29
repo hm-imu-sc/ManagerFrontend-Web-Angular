@@ -1,6 +1,7 @@
 <div 
     class="flex flex-col md:flex-row justify-center"
-    [class.disabled]="!enabled">
+    [class.disabled]="!enabled"
+    [class.readonly]="readonly">
     @for (app of opts$ | async; track $index) {
         <ng-container
             [ngTemplateOutlet]="optTab"

@@ -23,7 +23,7 @@
     @if (isOpenTicketEditor) {
         <app-modal 
             [title]="getDevTicketEditorTitle()" 
-            (closed)="closeModal()">
+            (closed)="closeDevTicketEditor()">
             <app-dev-ticket-editor
                 [devTicket]="getSelectedDevTicket()"
                 (onCreateNewTicket)="createNewTicketAsync($event)">
