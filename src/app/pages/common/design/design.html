@@ -5,7 +5,8 @@
         <app-option-chooser 
             [options]="getOptions()"
             [noOptMessage]="''"
-            (onOptionClick)="onOptionClick($event)">
+            [allowMultiSelect]="true"
+            (onOptionToggle)="onOptionClick($event)">
         </app-option-chooser>
     </app-loading-panel>
     <br>

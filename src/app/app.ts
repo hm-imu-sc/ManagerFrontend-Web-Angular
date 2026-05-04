@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AlertBox } from './components/alert-box/alert-box';
+import { AlertBox } from './components/generics/alert-box/alert-box';
 
 @Component({
     selector: 'app-root',

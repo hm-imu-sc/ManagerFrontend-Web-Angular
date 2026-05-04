@@ -2,28 +2,29 @@
     class="flex flex-col md:flex-row justify-center"
     [class.disabled]="!enabled"
     [class.readonly]="readonly">
-    @for (app of opts$ | async; track $index) {
+    @for (opt of opts$ | async; track $index) {
         <ng-container
             [ngTemplateOutlet]="optTab"
-            [ngTemplateOutletContext]="{ optName: app.name, index: $index }">
+            [ngTemplateOutletContext]="{ opt: opt }">
         </ng-container>
     }
     @if (opts$.value.length === 0) {
         <ng-container
             [ngTemplateOutlet]="optTab"
-            [ngTemplateOutletContext]="{ optName: noOptMessage, index: dummy.int }">
+            [ngTemplateOutletContext]="getDummyOpt()">
         </ng-container>
     }
 </div>
 
-<ng-template #optTab let-optName="optName" let-index="index">
+<ng-template #optTab let-opt="opt">
     <button
         type="button" 
         class="opt-tab w-full"
         [class.clickable]="opts$.value.length > 0"
-        [class.selected]="selectedOptIdx !== dummy.int && index === selectedOptIdx"
-        [class.placeholder]="optName === ''"
-        (click)="selectOpt(index)">
-        {{ optName }}
+        [class.togglable]="isOptionSelected(opt) && allowMultiSelect"
+        [class.selected]="isOptionSelected(opt) && !allowMultiSelect"
+        [class.placeholder]="opt.name === ''"
+        (click)="onOptClick(opt)">
+        {{ opt.name }}
     </button>
 </ng-template>

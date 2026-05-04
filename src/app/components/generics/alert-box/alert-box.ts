@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AlertService, AlertMessage } from '../../services/alert-service';
+import { AlertService, AlertMessage } from '../../../services/alert-service';
 import { CommonModule } from '@angular/common';
 
 

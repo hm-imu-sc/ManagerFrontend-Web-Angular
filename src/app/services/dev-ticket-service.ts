@@ -6,12 +6,13 @@ import { UtilityService } from './utility-service';
 import { AlertService } from './alert-service';
 import { BadgeColorProfile } from '../types/BadgeColorProfile';
 import { Dummy, Empty } from '../../constants';
+import { DevTicketFilter } from '../types/DevTicketFilter';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DevTicketService {
-    private readonly _devTicketStatuses: DevTicketStatus[] = [
+    public readonly devTicketStatuses: DevTicketStatus[] = [
         { 
             id: 0,
             name: 'Creating',
@@ -38,13 +39,13 @@ export class DevTicketService {
         }
     ] as const;
 
-    private readonly _nextStatusMap = new Map<number, DevTicketStatus>([
-        [DevTicketStatusEnum.Creating, this._devTicketStatuses[DevTicketStatusEnum.New]],
-        [DevTicketStatusEnum.New, this._devTicketStatuses[DevTicketStatusEnum.InProgress]],
-        [DevTicketStatusEnum.InProgress, this._devTicketStatuses[DevTicketStatusEnum.Done]]
+    public readonly nextStatusMap = new Map<number, DevTicketStatus>([
+        [DevTicketStatusEnum.Creating, this.devTicketStatuses[DevTicketStatusEnum.New]],
+        [DevTicketStatusEnum.New, this.devTicketStatuses[DevTicketStatusEnum.InProgress]],
+        [DevTicketStatusEnum.InProgress, this.devTicketStatuses[DevTicketStatusEnum.Done]]
     ]);
 
-    private readonly _priorityColorMap = new Map<number, BadgeColorProfile>([
+    public readonly priorityColorMap = new Map<number, BadgeColorProfile>([
         [DevTicketPriorityEnum.High, 'violet'],
         [DevTicketPriorityEnum.Medium, 'orange'],
         [DevTicketPriorityEnum.Low, 'default']
@@ -55,7 +56,7 @@ export class DevTicketService {
         private _alertService: AlertService) { }
 
     getStatus(devTicket: DevTicket): DevTicketStatus {
-        return this._devTicketStatuses[devTicket.status];
+        return this.devTicketStatuses[devTicket.status];
     }
 
     getPriority(devTicket: DevTicket): DevTicketPriority {
@@ -68,11 +69,11 @@ export class DevTicketService {
             this._alertService.show(`getNextStatus(): devTicket.status(${devTicket.status}) is undefined !`);
             throw error;
         }
-        return this._nextStatusMap.get(devTicket.status)!;
+        return this.nextStatusMap.get(devTicket.status)!;
     }
     
     getPriorityColor(devTicket: DevTicket): BadgeColorProfile {
-        return this._priorityColorMap.get(this.getPriority(devTicket).id) ?? 'default';
+        return this.priorityColorMap.get(this.getPriority(devTicket).id) ?? 'default';
     }
     
     isStatus(devTicket: DevTicket, statusEnum: DevTicketStatusEnum):boolean {
@@ -102,5 +103,10 @@ export class DevTicketService {
             priority: DevTicketPriorityEnum.Medium // Setting medium priotiry as default
         };
     }
+ 
+    hasFilterSatisfied(devTicket: DevTicket, filter: DevTicketFilter | undefined | null): boolean {
+        return this._utilService.isNullOrUndefined(filter)
+            || ((this._utilService.isNullOrEmptyArray(filter!.status) || this._utilService.isContain(filter!.status, devTicket.status))
+            && (this._utilService.isNullOrEmptyArray(filter!.priority) || this._utilService.isContain(filter!.priority, devTicket.priority)));
+    }
 }
-    

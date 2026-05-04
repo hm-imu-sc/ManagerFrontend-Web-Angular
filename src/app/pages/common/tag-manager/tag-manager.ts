@@ -3,10 +3,10 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@an
 import { BehaviorSubject } from 'rxjs';
 import { ApiService } from '../../../services/api-service';
 import { AlertService } from '../../../services/alert-service';
-import { PageTitle } from "../../../components/page-title/page-title";
+import { PageTitle } from "../../../components/generics/page-title/page-title";
 import { Dummy, Empty } from '../../../../constants';
 import { App, AppList } from '../../../components/app-list/app-list';
-import { LoadingPanel } from "../../../components/loading-panel/loading-panel";
+import { LoadingPanel } from "../../../components/generics/loading-panel/loading-panel";
 import { UtilityService } from '../../../services/utility-service';
 
 type Tag = {

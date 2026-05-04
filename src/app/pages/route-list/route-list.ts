@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from "@angular/router";
-import { PageTitle } from "../../components/page-title/page-title";
+import { PageTitle } from "../../components/generics/page-title/page-title";
 import { routes } from '../../app.routes';
 
 @Component({

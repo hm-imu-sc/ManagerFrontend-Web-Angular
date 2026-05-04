@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Empty } from '../../../constants';
+import { Empty } from '../../../../constants';
 
 type SpinenrSize = 'sm' | 'lg';
 

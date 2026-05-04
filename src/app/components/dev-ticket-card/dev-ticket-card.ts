@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Badge } from "../badge/badge";
+import { Badge } from "../generics/badge/badge";
 import { DevTicket } from '../../types/DevTicket';
 import { DevTicketService } from '../../services/dev-ticket-service';
 

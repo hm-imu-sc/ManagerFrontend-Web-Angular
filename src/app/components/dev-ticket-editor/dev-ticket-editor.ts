@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Option, OptionChooser } from "../option-chooser/option-chooser";
+import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Option, OptionChooser } from "../generics/option-chooser/option-chooser";
 import { Dummy, Empty } from '../../../constants';
 import { UtilityService } from '../../services/utility-service';
 import { DevTicket } from '../../types/DevTicket';
@@ -46,6 +46,16 @@ export class DevTicketEditor {
         [DevTicketStatusEnum.New, 'Start'],
         [DevTicketStatusEnum.InProgress, 'Finish']
     ]);
+
+    @HostListener('window:keydown', ['$event'])
+    async handleKeyDown(event: KeyboardEvent) {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+            event.preventDefault();
+            if (!this._devTicketService.isStatus(this.devTicket, DevTicketStatusEnum.Creating) && this.hasPendingChanges()) {
+                await this.saveChangesAsync();
+            }
+        }
+    }
 
     constructor(
         public _utilService: UtilityService,

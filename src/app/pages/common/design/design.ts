@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { AppList } from "../../../components/app-list/app-list";
-import { Modal } from "../../../components/modal/modal";
-import { PageTitle } from "../../../components/page-title/page-title";
-import { Option, OptionChooser } from "../../../components/option-chooser/option-chooser";
+import { PageTitle } from "../../../components/generics/page-title/page-title";
+import { Option, OptionChooser } from "../../../components/generics/option-chooser/option-chooser";
 import { AlertService } from '../../../services/alert-service';
-import { LoadingPanel } from "../../../components/loading-panel/loading-panel";
+import { LoadingPanel } from "../../../components/generics/loading-panel/loading-panel";
 
 type d = { id: number, title: string }
 
@@ -24,11 +23,11 @@ export class Design {
     }
 
     getOptions(): Option[] {
-        return [];
+        // return [];
         return this.data.map(d => ({ id: d.id, name: d.title }));
     }
 
-    onOptionClick(optionId: number) {
-        this._alertService.show(`Option choosen with id: ${optionId}`);
+    onOptionClick(optionIds: number[]) {
+        this._alertService.show(`Option choosen with id: ${optionIds}`);
     }
 }

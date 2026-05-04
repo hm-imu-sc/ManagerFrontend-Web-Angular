@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PageTitle } from "../../../components/page-title/page-title";
+import { PageTitle } from "../../../components/generics/page-title/page-title";
 
 @Component({
   selector: 'cost-recorder',

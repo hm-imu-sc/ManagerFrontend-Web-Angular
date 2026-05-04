@@ -4,19 +4,29 @@
     <app-app-list (onAppClick)="onAppClick($event)"></app-app-list>
     <br/>
     <div class="flex flex-col gap-2">
-        <button 
-            class="btn-basic clickable"
-            [class.hidden]="!isAppSelected()"
-            (click)="openNewTicket()">
-            <i class="fas fa-plus"></i>&nbsp;&nbsp;Create Dev Ticket
-        </button>
+        <div class="flex flex-col md:flex-row gap-2">
+            <button
+                class="btn-basic clickable flex-2"
+                [class.hidden]="!isAppSelected"
+                (click)="openFilterPanel()">
+                <i class="fas fa-filter"></i>&nbsp;&nbsp;Filter
+            </button>
+            <button 
+                class="btn-basic clickable flex-10"
+                [class.hidden]="!isAppSelected"
+                (click)="openNewTicket()">
+                <i class="fas fa-plus"></i>&nbsp;&nbsp;Create Dev Ticket
+            </button>
+        </div>
         @for (ticket of devTickets$ | async; track $index) {
-            <app-dev-ticket-card
-                [devTicket]="ticket"
-                (onClick)="onTicketClick($index)">
-            </app-dev-ticket-card>
+            @if (_devTicketService.hasFilterSatisfied(ticket, devTicketFilter$ | async)) {
+                <app-dev-ticket-card
+                    [devTicket]="ticket"
+                    (onClick)="onTicketClick($index)">
+                </app-dev-ticket-card>
+            }
         }
-        @if (!isAppSelected()) {
+        @if (!isAppSelected) {
             <div class="placeholder">Select app to view it's development tickets.</div>
         }
     </div>
@@ -28,6 +38,26 @@
                 [devTicket]="getSelectedDevTicket()"
                 (onCreateNewTicket)="createNewTicketAsync($event)">
             </app-dev-ticket-editor>
+        </app-modal>
+    }
+    @if (isOpenFilterPanel) {
+        <app-modal 
+            [title]="'Apply Filter'" 
+            (closed)="closeFilterPanel()">
+            <div class="min-w-[70vw] md:min-w-[40vw] flex flex-col gap-5">
+                <app-option-chooser
+                    [options]="getAllStatus()"
+                    [selectedOptionIds]="(devTicketFilter$ | async)?.status ?? []"
+                    [allowMultiSelect]="true"
+                    (onOptionToggle)="applyStatusFilterAsync($event)">
+                </app-option-chooser>
+                <app-option-chooser
+                    [options]="getAllPriority()"
+                    [selectedOptionIds]="(devTicketFilter$ | async)?.priority ?? []"
+                    [allowMultiSelect]="true"
+                    (onOptionToggle)="applyPriorityFilterAsync($event)">
+                </app-option-chooser>
+            </div>
         </app-modal>
     }
 </div>

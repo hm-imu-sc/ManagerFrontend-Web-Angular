@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { BadgeColorProfile } from '../../types/BadgeColorProfile';
+import { BadgeColorProfile } from '../../../types/BadgeColorProfile';
 
 type BadgeProfileColor = {
     backgroundColor: string,

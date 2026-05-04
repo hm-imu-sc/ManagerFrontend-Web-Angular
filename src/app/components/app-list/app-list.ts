@@ -4,8 +4,8 @@ import { Dummy, Empty } from '../../../constants';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../services/alert-service';
 import { ApiService } from '../../services/api-service';
-import { LoadingPanel } from "../loading-panel/loading-panel";
-import { OptionChooser } from "../option-chooser/option-chooser";
+import { LoadingPanel } from "../generics/loading-panel/loading-panel";
+import { OptionChooser } from "../generics/option-chooser/option-chooser";
 
 export type App = {
     id: number,
